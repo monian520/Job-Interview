@@ -1,6 +1,6 @@
 # Job-Interview
 ##1. 迅雷2014C++研发笔试卷C
-> * **有关 #include <stdio.h\> 和 #include "stdio.h" 的区别；**
+> * **有关 #include \<stdio.h\> 和 #include "stdio.h" 的区别；**
 
 <>引用的是编译器的类库路径里面的头文件，""引用的是你程序目录的相对路径中的头文件。假如你编译器定义的自带头文件引用在C:\Keil\c51\INC\下面，则#include<stdio.h>引用的就是C:\Keil\c51\INC\stdio.h这个头文件，不管你的项目在什么目录里，C:\Keil\c51\INC\stdio.h这个路径就定下来了。一般是引用自带的一些头文件：stdio.h、conio.h、string.h、stdlib.h等等之类的。
 
