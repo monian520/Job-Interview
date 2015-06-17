@@ -426,3 +426,160 @@ int rand10()
 ![答案](http://7xjspk.com1.z0.glb.clouddn.com/QQ图片20150617181516.png)
 
 
+###3.12 求一个字符串的最长重复子串
+
+举例： ask not what your country  can do for you ,but what you can do for your   country 
+
+最长的重复子序列：can do for you 
+
+思路：使用后缀数组解决 
+
+分析： 
+
+1、由于要求最长公共子序列，则需要 找到字符串的所有子序列 ，即通过产生字符串的后缀数组实现。 
+
+2、由于要求最长的重复子序列，则需要对所有子序列进行排序，这样可以把 相同的字符串排在一起 。 
+
+3、比较相邻字符串 ，找出两个子串中，相同的字符的个数。 
+
+注意，对于一个子串，一个与其重复最多的字符串肯定是紧挨着自己的两个字符串。 
+
+步骤： 
+
+1、对待处理的字符串产生后缀数组   
+
+2、对后缀数组排序   
+
+3、依次检测相邻两个后缀的公共长度   
+
+4、取出最大公共长度 的前缀   
+
+
+举例： 输入字符串 banana 
+
+1、字符串产生的后缀数组：
+a[0]:banana
+
+a[1]:anana
+
+a[2]:nana
+
+a[3]:ana
+
+a[4]:na
+
+a[5]:a 
+
+
+2、对后缀数组进行快速排序，以将后缀相近的（变位词）子串集中在一起 
+
+a[0]:a
+
+a[1]:ana
+
+a[2]:anana
+
+a[3]:banana
+
+a[4]:na
+
+a[5]:nana 
+
+之后可以依次检测相邻两个后缀的公共长度并取出最大公共的前缀
+
+
+```C++
+#include <iostream> 
+#include <algorithm> 
+#include <string> 
+
+using namespace std;
+
+const int MaxCharNum = 5000000;
+
+bool StrCmp(char* str1, char* str2);
+void GenSuffixArray(char* str, char* suffixStr[]);
+int ComStrLen(char* str1, char* str2);
+void GenMaxReStr(char* str);
+
+int main()
+{
+	char str[MaxCharNum];
+	cin.getline(str, MaxCharNum);//遇到回车结束 
+	GenMaxReStr(str);
+	system("pause");
+	return 0;
+}
+
+void GenMaxReStr(char* str)
+{
+	int len = strlen(str);
+	int comReStrLen = 0;
+	int maxLoc = 0;
+	int maxLen = 0;
+	char* suffixStr[MaxCharNum];
+
+	GenSuffixArray(str, suffixStr);//产生后缀数组 
+
+
+	//对后缀数组进行排序 
+	sort(suffixStr, suffixStr + len, StrCmp);
+
+	//统计相邻单词中相同的字符数，并输出结果 
+	for (int i = 0; i < len - 1; i++)
+	{
+		comReStrLen = ComStrLen(suffixStr[i], suffixStr[i + 1]);
+		if (comReStrLen > maxLen)
+		{
+			maxLoc = i;
+			maxLen = comReStrLen;
+		}
+	}
+	//输出结果 
+	for (int i = 0; i < maxLen; i++)
+	{
+		cout << suffixStr[maxLoc][i];
+	}
+	cout << endl;
+}
+
+
+/*为字符串产生其后缀数组，并存放到数组suffixStr中*/
+void GenSuffixArray(char* str, char* suffixStr[])
+{
+	int len = strlen(str);
+	for (int i = 0; i < len; i++)
+	{
+		suffixStr[i] = &str[i];
+	}
+}
+
+
+/*返回str1和str2的共同前缀的长度*/
+int ComStrLen(char* str1, char* str2)
+{
+	int comLen = 0;
+	while (*str1 && *str2)
+	{
+		if (*str1 == *str2)
+		{
+			comLen++;
+		}
+		str1++;
+		str2++;
+	}
+	return comLen;
+}
+
+
+//字符串升序排序 
+bool StrCmp(char* str1, char* str2)
+{
+	if (strcmp(str1, str2) >= 0)
+	{
+		return false;
+	}
+	return true;
+}
+
+```
